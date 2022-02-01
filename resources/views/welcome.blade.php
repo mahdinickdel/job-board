@@ -3,13 +3,13 @@
 @section('page.title', 'سیستم کاریابی آنلاین')
 
 @section('page.styles')
-    <!-- Slider -->
-    <link rel="stylesheet" href="{{ asset('assets/css/tiny-slider.css') }}" />
+<!-- Slider -->
+<link rel="stylesheet" href="{{ asset('assets/css/tiny-slider.css') }}" />
 @endsection
 
 @push('page.footer.scripts')
-    <!-- SLIDER -->
-    <script src="{{ asset('assets/js/tiny-slider.js') }}"></script>
+<!-- SLIDER -->
+<script src="{{ asset('assets/js/tiny-slider.js') }}"></script>
 @endpush
 
 @section('page.content')
@@ -131,108 +131,19 @@
         <!--end row-->
 
         <div class="row">
+            @foreach ($categories as $category)
             <div class="col-lg-3 col-md-6 col-12 mt-4 pt-2">
                 <div class="card categories overflow-hidden rounded shadow border-0">
                     <img src="{{ asset('assets/images/placeholder.jpeg') }}" class="img-fluid" alt="">
                     <div class="card-body">
                         <ul class="list-unstyled d-flex justify-content-between mb-0">
-                            <li><a href="javascript:void(0)" class="title h6 text-dark">Communications</a></li>
-                            <li class="h6 mb-0 jobs">125 Jobs</li>
+                            <li><a href="{{ route('jobs', ['category' => $category->id]) }}" class="title h6 text-dark">{{ $category->name }}</a></li>
+                            <li class="h6 mb-0 jobs">{{ $category->jobs_count }} آگهی</li>
                         </ul>
                     </div>
                 </div>
             </div>
-            <!--end col-->
-
-            <div class="col-lg-3 col-md-6 col-12 mt-4 pt-2">
-                <div class="card categories overflow-hidden rounded shadow border-0">
-                    <img src="{{ asset('assets/images/placeholder.jpeg') }}" class="img-fluid" alt="">
-                    <div class="card-body">
-                        <ul class="list-unstyled d-flex justify-content-between mb-0">
-                            <li><a href="javascript:void(0)" class="title h6 text-dark">Accounting</a></li>
-                            <li class="h6 mb-0 jobs">125 Jobs</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-            <!--end col-->
-
-            <div class="col-lg-3 col-md-6 col-12 mt-4 pt-2">
-                <div class="card categories overflow-hidden rounded shadow border-0">
-                    <img src="{{ asset('assets/images/placeholder.jpeg') }}" class="img-fluid" alt="">
-                    <div class="card-body">
-                        <ul class="list-unstyled d-flex justify-content-between mb-0">
-                            <li><a href="javascript:void(0)" class="title h6 text-dark">Restaurant</a></li>
-                            <li class="h6 mb-0 jobs">125 Jobs</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-            <!--end col-->
-
-            <div class="col-lg-3 col-md-6 col-12 mt-4 pt-2">
-                <div class="card categories overflow-hidden rounded shadow border-0">
-                    <img src="{{ asset('assets/images/placeholder.jpeg') }}" class="img-fluid" alt="">
-                    <div class="card-body">
-                        <ul class="list-unstyled d-flex justify-content-between mb-0">
-                            <li><a href="javascript:void(0)" class="title h6 text-dark">Health</a></li>
-                            <li class="h6 mb-0 jobs">125 Jobs</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-            <!--end col-->
-
-            <div class="col-lg-3 col-md-6 col-12 mt-4 pt-2">
-                <div class="card categories overflow-hidden rounded shadow border-0">
-                    <img src="{{ asset('assets/images/placeholder.jpeg') }}" class="img-fluid" alt="">
-                    <div class="card-body">
-                        <ul class="list-unstyled d-flex justify-content-between mb-0">
-                            <li><a href="javascript:void(0)" class="title h6 text-dark">Finance</a></li>
-                            <li class="h6 mb-0 jobs">125 Jobs</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-            <!--end col-->
-
-            <div class="col-lg-3 col-md-6 col-12 mt-4 pt-2">
-                <div class="card categories overflow-hidden rounded shadow border-0">
-                    <img src="{{ asset('assets/images/placeholder.jpeg') }}" class="img-fluid" alt="">
-                    <div class="card-body">
-                        <ul class="list-unstyled d-flex justify-content-between mb-0">
-                            <li><a href="javascript:void(0)" class="title h6 text-dark">Facilities</a></li>
-                            <li class="h6 mb-0 jobs">125 Jobs</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-            <!--end col-->
-
-            <div class="col-lg-3 col-md-6 col-12 mt-4 pt-2">
-                <div class="card categories overflow-hidden rounded shadow border-0">
-                    <img src="{{ asset('assets/images/placeholder.jpeg') }}" class="img-fluid" alt="">
-                    <div class="card-body">
-                        <ul class="list-unstyled d-flex justify-content-between mb-0">
-                            <li><a href="javascript:void(0)" class="title h6 text-dark">HR</a></li>
-                            <li class="h6 mb-0 jobs">125 Jobs</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-            <!--end col-->
-
-            <div class="col-lg-3 col-md-6 col-12 mt-4 pt-2">
-                <div class="card categories overflow-hidden rounded shadow border-0">
-                    <img src="{{ asset('assets/images/placeholder.jpeg') }}" class="img-fluid" alt="">
-                    <div class="card-body">
-                        <ul class="list-unstyled d-flex justify-content-between mb-0">
-                            <li><a href="javascript:void(0)" class="title h6 text-dark">Construction</a></li>
-                            <li class="h6 mb-0 jobs">125 Jobs</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
+            @endforeach
             <!--end col-->
         </div>
         <!--end row-->

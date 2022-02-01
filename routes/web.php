@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Jobs\JobController;
+use App\Http\Controllers\Welcome\WelcomeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,9 +15,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-})->name('welcome');
+Route::get('/', WelcomeController::class)->name('welcome');
 
 Route::as('auth.')->group(function () {
 
@@ -33,10 +33,13 @@ Route::as('auth.')->group(function () {
 
 });
 
+Route::get('/my', function () {
+    return view('user.profile');
+})->name('profile')->middleware('auth');
 
-Route::get('/jobs', function () {
-    return view('jobs.index');
-})->name('jobs');
+Route::get('/jobs', [JobController::class, 'index'])->name('jobs');
+Route::get('/jobs/{id}', [JobController::class, 'single'])->name('job');
+
 
 Route::get('/contact', function () {
     return view('pages.contact');

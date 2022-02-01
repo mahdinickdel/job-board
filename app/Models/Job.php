@@ -46,7 +46,7 @@ class Job extends Model
      */
     public function city()
     {
-        return $this->belongsTo(Province::class);
+        return $this->belongsTo(City::class);
     }
 
     /**
@@ -55,5 +55,41 @@ class Job extends Model
     public function category()
     {
         return $this->belongsTo(Category::class);
+    }
+
+    /**
+     * Get the jobs's type.
+     *
+     * @return string
+     */
+    public function getTheTypeAttribute()
+    {
+        $types = [
+            'full-time' => 'تمام وقت',
+            'part-time' => 'نیمه وقت',
+            'remote' => 'ریموت',
+        ];
+
+        return $types[$this->type];
+    }
+
+    /**
+     * Get the jobs's formatted salary.
+     *
+     * @return string
+     */
+    public function getTheSalaryAttribute()
+    {
+        return number_format($this->salary);
+    }
+
+    /**
+     * Get the jobs's formatted creation date.
+     *
+     * @return string
+     */
+    public function getTheCreatedAtAttribute()
+    {
+        return verta($this->created_at)->format('j F Y ساعت H:i');
     }
 }

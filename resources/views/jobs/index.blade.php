@@ -8,12 +8,13 @@
 @include('partials.header')
 
 <!-- Hero Start -->
-<section class="bg-half-170 bg-primary d-table w-100" style="background-image: url('{{ asset('assets/images/job/bg.png') }}');">
+<section class="bg-half-170 bg-primary d-table w-100"
+    style="background-image: url('{{ asset('assets/images/job/bg.png') }}');">
     <div class="container">
         <div class="row mt-5 justify-content-center">
             <div class="col-lg-12 text-center">
                 <div class="pages-heading">
-                    <h2 class="title text-white title-dark mb-0"> Jobs / Careers </h2>
+                    <h2 class="title text-white title-dark mb-0"> فرصت های شغلی </h2>
                 </div>
             </div>
             <!--end col-->
@@ -41,11 +42,12 @@
         <div class="row">
             <div class="col-12">
                 <div class=" features-absolute">
-                    <form class="rounded p-4 mt-4 bg-white shadow">
+                    <form class="rounded p-4 mt-4 bg-white shadow" method="get" action="{{ route('jobs') }}">
                         <div class="row text-start">
                             <div class="col-lg-5 col-md-4">
                                 <div class="mb-0">
-                                    <input type="text" class="form-control" required placeholder="Keywords">
+                                    <input type="text" class="form-control" placeholder="عبارت جستجو" name="q"
+                                        value="{{ request('q') }}">
                                 </div>
                             </div>
                             <!--end col-->
@@ -54,17 +56,11 @@
                                 <div class="row align-items-center">
                                     <div class="col-md-4 mt-4 mt-sm-0">
                                         <div class="mb-0">
-                                            <select class="form-control form-select">
-                                                <option selected="">Location</option>
-                                                <option value="AF">Afghanistan</option>
-                                                <option value="AX">&Aring;land Islands</option>
-                                                <option value="AL">Albania</option>
-                                                <option value="DZ">Algeria</option>
-                                                <option value="AS">American Samoa</option>
-                                                <option value="AD">Andorra</option>
-                                                <option value="AO">Angola</option>
-                                                <option value="AI">Anguilla</option>
-                                                <option value="AQ">Antarctica</option>
+                                            <select class="form-control form-select" name="province">
+                                                <option selected="">استان</option>
+                                                @foreach ($provinces as $province)
+                                                    <option value="{{ $province->id }}">{{ $province->name }}</option>
+                                                @endforeach
                                             </select>
                                         </div>
                                     </div>
@@ -85,8 +81,8 @@
 
                                     <div class="col-md-4 mt-4 mt-sm-0">
                                         <div class="d-grid">
-                                            <input type="submit" id="search" name="search"
-                                                class="searchbtn btn btn-primary" value="Search">
+                                            <input type="submit" id="search" class="searchbtn btn btn-primary"
+                                                value="جستجو">
                                         </div>
                                     </div>
                                     <!--end col-->
@@ -257,12 +253,13 @@
                 <div class="row align-items-center">
                     <div class="col-lg-9 col-md-8">
                         <div class="section-title">
-                            <span class="text-muted me-3">Showing 1 - 15 out of 452</span>
+                            <span class="text-muted me-3">نمایش {{ $jobs->firstItem() }} تا {{ $jobs->lastItem() }} از
+                                {{ $jobs->total() }} فرصت شغلی</span>
                         </div>
                     </div>
                     <!--end col-->
 
-                    <div class="col-lg-3 col-md-4 mt-4 mt-sm-0 pt-2 pt-sm-0">
+                    {{-- <div class="col-lg-3 col-md-4 mt-4 mt-sm-0 pt-2 pt-sm-0">
                         <div class="form custom-form">
                             <select class="form-select form-control" aria-label="Default select example"
                                 id="Sortbylist-job">
@@ -273,311 +270,50 @@
                                 <option>Work From Home</option>
                             </select>
                         </div>
-                    </div>
+                    </div> --}}
                     <!--end col-->
                 </div>
                 <!--end row-->
 
                 <div class="row">
+                    @foreach ($jobs as $job)
                     <div class="col-12 mt-4 pt-2">
                         <div class="job-box d-md-flex align-items-center border-0 shadow rounded p-4 position-relative">
-                            <img src="{{ asset('assets/images/logo-placeholder.jpeg') }}" class="avatar avatar-md-sm" alt="">
+                            <img src="{{ asset('assets/images/logo-placeholder.jpeg') }}" class="avatar avatar-md-sm"
+                                alt="">
 
                             <div class="ms-md-4 mt-4 mt-sm-0">
-                                <a href="#" class="text-dark h5">Web Developer</a>
+                                <a href="{{ route('job', ['id' => $job->id]) }}" class="text-dark h5">{{ $job->title
+                                    }}</a>
 
                                 <ul class="list-unstyled mb-0 mt-2">
                                     <li class="d-lg-inline text-muted h6 mb-0 me-lg-2"><i
                                             class="uil uil-map-marker text-primary"></i> <a href="javascript:void(0)"
-                                            class="text-dark">CircleCI</a>, San Francisco
+                                            class="text-dark">{{ $job->province->name }}</a>, {{ $job->city->name }}
                                     </li>
                                     <li class="d-lg-inline text-muted h6 mb-0 me-lg-2"><i
-                                            class="uil uil-clock text-primary"></i> 8hr/ Day</li>
+                                            class="uil uil-file text-primary"></i> {{ $job->category->name }} </li>
                                     <li class="d-lg-inline text-muted h6 mb-0"><i class="uil uil-bill text-primary"></i>
-                                        30k-35k</li>
+                                        {{ $job->the_salary }}</li>
                                 </ul>
 
                                 <div class="mt-2">
-                                    <span class="badge bg-soft-primary">Fulltime</span>
-                                    <span class="badge bg-soft-warning">Office</span>
+                                    <span class="badge bg-soft-primary">{{ $job->the_type }}</span>
                                 </div>
                             </div>
 
-                            <div class="position-absolute top-0 end-0 mt-3 me-3">
+                            {{-- <div class="position-absolute top-0 end-0 mt-3 me-3">
                                 <a href="javascript:void(0)" class="btn btn-icon btn-pills btn-soft-primary"><i
                                         class="uil uil-bookmark align-middle"></i></a>
-                            </div>
+                            </div> --}}
                         </div>
                     </div>
-                    <!--end col-->
+                    @endforeach
 
                     <div class="col-12 mt-4 pt-2">
-                        <div class="job-box d-md-flex align-items-center border-0 shadow rounded p-4 position-relative">
-                            <img src="{{ asset('assets/images/logo-placeholder.jpeg') }}" class="avatar avatar-md-sm" alt="">
 
-                            <div class="ms-md-4 mt-4 mt-sm-0">
-                                <a href="#" class="text-dark h5">Web Designer</a>
+                        {{ $jobs->links() }}
 
-                                <ul class="list-unstyled mb-0 mt-2">
-                                    <li class="d-lg-inline text-muted h6 mb-0 me-lg-2"><i
-                                            class="uil uil-map-marker text-primary"></i> <a href="javascript:void(0)"
-                                            class="text-dark">MG</a>, San Francisco</li>
-                                    <li class="d-lg-inline text-muted h6 mb-0 me-lg-2"><i
-                                            class="uil uil-clock text-primary"></i> 8hr/ Day</li>
-                                    <li class="d-lg-inline text-muted h6 mb-0"><i class="uil uil-bill text-primary"></i>
-                                        30k-35k</li>
-                                </ul>
-
-                                <div class="mt-2">
-                                    <span class="badge bg-soft-primary">Fulltime</span>
-                                    <span class="badge bg-soft-warning">Office</span>
-                                </div>
-                            </div>
-
-                            <div class="position-absolute top-0 end-0 mt-3 me-3">
-                                <a href="javascript:void(0)" class="btn btn-icon btn-pills btn-soft-primary"><i
-                                        class="uil uil-bookmark align-middle"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                    <!--end col-->
-
-                    <div class="col-12 mt-4 pt-2">
-                        <div class="job-box d-md-flex align-items-center border-0 shadow rounded p-4 position-relative">
-                            <img src="{{ asset('assets/images/logo-placeholder.jpeg') }}" class="avatar avatar-md-sm" alt="">
-
-                            <div class="ms-md-4 mt-4 mt-sm-0">
-                                <a href="#" class="text-dark h5">Web Developer</a>
-
-                                <ul class="list-unstyled mb-0 mt-2">
-                                    <li class="d-lg-inline text-muted h6 mb-0 me-lg-2"><i
-                                            class="uil uil-map-marker text-primary"></i> <a href="javascript:void(0)"
-                                            class="text-dark">Codepen</a>, San Francisco
-                                    </li>
-                                    <li class="d-lg-inline text-muted h6 mb-0 me-lg-2"><i
-                                            class="uil uil-clock text-primary"></i> 8hr/ Day</li>
-                                    <li class="d-lg-inline text-muted h6 mb-0"><i class="uil uil-bill text-primary"></i>
-                                        30k-35k</li>
-                                </ul>
-
-                                <div class="mt-2">
-                                    <span class="badge bg-soft-primary">Fulltime</span>
-                                    <span class="badge bg-soft-warning">Office</span>
-                                </div>
-                            </div>
-
-                            <div class="position-absolute top-0 end-0 mt-3 me-3">
-                                <a href="javascript:void(0)" class="btn btn-icon btn-pills btn-soft-primary"><i
-                                        class="uil uil-bookmark align-middle"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                    <!--end col-->
-
-                    <div class="col-12 mt-4 pt-2">
-                        <div class="job-box d-md-flex align-items-center border-0 shadow rounded p-4 position-relative">
-                            <img src="{{ asset('assets/images/logo-placeholder.jpeg') }}" class="avatar avatar-md-sm" alt="">
-
-                            <div class="ms-md-4 mt-4 mt-sm-0">
-                                <a href="#" class="text-dark h5">Web Developer</a>
-
-                                <ul class="list-unstyled mb-0 mt-2">
-                                    <li class="d-lg-inline text-muted h6 mb-0 me-lg-2"><i
-                                            class="uil uil-map-marker text-primary"></i> <a href="javascript:void(0)"
-                                            class="text-dark">Discord</a>, San Francisco
-                                    </li>
-                                    <li class="d-lg-inline text-muted h6 mb-0 me-lg-2"><i
-                                            class="uil uil-clock text-primary"></i> 8hr/ Day</li>
-                                    <li class="d-lg-inline text-muted h6 mb-0"><i class="uil uil-bill text-primary"></i>
-                                        30k-35k</li>
-                                </ul>
-
-                                <div class="mt-2">
-                                    <span class="badge bg-soft-primary">Fulltime</span>
-                                    <span class="badge bg-soft-warning">Office</span>
-                                </div>
-                            </div>
-
-                            <div class="position-absolute top-0 end-0 mt-3 me-3">
-                                <a href="javascript:void(0)" class="btn btn-icon btn-pills btn-soft-primary"><i
-                                        class="uil uil-bookmark align-middle"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                    <!--end col-->
-
-                    <div class="col-12 mt-4 pt-2">
-                        <div class="job-box d-md-flex align-items-center border-0 shadow rounded p-4 position-relative">
-                            <img src="{{ asset('assets/images/logo-placeholder.jpeg') }}" class="avatar avatar-md-sm" alt="">
-
-                            <div class="ms-md-4 mt-4 mt-sm-0">
-                                <a href="#" class="text-dark h5">Web Developer</a>
-
-                                <ul class="list-unstyled mb-0 mt-2">
-                                    <li class="d-lg-inline text-muted h6 mb-0 me-lg-2"><i
-                                            class="uil uil-map-marker text-primary"></i> <a href="javascript:void(0)"
-                                            class="text-dark">Eslint</a>, San Francisco
-                                    </li>
-                                    <li class="d-lg-inline text-muted h6 mb-0 me-lg-2"><i
-                                            class="uil uil-clock text-primary"></i> 8hr/ Day</li>
-                                    <li class="d-lg-inline text-muted h6 mb-0"><i class="uil uil-bill text-primary"></i>
-                                        30k-35k</li>
-                                </ul>
-
-                                <div class="mt-2">
-                                    <span class="badge bg-soft-primary">Fulltime</span>
-                                    <span class="badge bg-soft-warning">Office</span>
-                                </div>
-                            </div>
-
-                            <div class="position-absolute top-0 end-0 mt-3 me-3">
-                                <a href="javascript:void(0)" class="btn btn-icon btn-pills btn-soft-primary"><i
-                                        class="uil uil-bookmark align-middle"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                    <!--end col-->
-
-                    <div class="col-12 mt-4 pt-2">
-                        <div class="job-box d-md-flex align-items-center border-0 shadow rounded p-4 position-relative">
-                            <img src="{{ asset('assets/images/logo-placeholder.jpeg') }}" class="avatar avatar-md-sm" alt="">
-
-                            <div class="ms-md-4 mt-4 mt-sm-0">
-                                <a href="#" class="text-dark h5">Web Developer</a>
-
-                                <ul class="list-unstyled mb-0 mt-2">
-                                    <li class="d-lg-inline text-muted h6 mb-0 me-lg-2"><i
-                                            class="uil uil-map-marker text-primary"></i> <a href="javascript:void(0)"
-                                            class="text-dark">Gitlab</a>, San Francisco
-                                    </li>
-                                    <li class="d-lg-inline text-muted h6 mb-0 me-lg-2"><i
-                                            class="uil uil-clock text-primary"></i> 8hr/ Day</li>
-                                    <li class="d-lg-inline text-muted h6 mb-0"><i class="uil uil-bill text-primary"></i>
-                                        30k-35k</li>
-                                </ul>
-
-                                <div class="mt-2">
-                                    <span class="badge bg-soft-primary">Fulltime</span>
-                                    <span class="badge bg-soft-warning">Office</span>
-                                </div>
-                            </div>
-
-                            <div class="position-absolute top-0 end-0 mt-3 me-3">
-                                <a href="javascript:void(0)" class="btn btn-icon btn-pills btn-soft-primary"><i
-                                        class="uil uil-bookmark align-middle"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                    <!--end col-->
-
-                    <div class="col-12 mt-4 pt-2">
-                        <div class="job-box d-md-flex align-items-center border-0 shadow rounded p-4 position-relative">
-                            <img src="{{ asset('assets/images/logo-placeholder.jpeg') }}" class="avatar avatar-md-sm" alt="">
-
-                            <div class="ms-md-4 mt-4 mt-sm-0">
-                                <a href="#" class="text-dark h5">Web Developer</a>
-
-                                <ul class="list-unstyled mb-0 mt-2">
-                                    <li class="d-lg-inline text-muted h6 mb-0 me-lg-2"><i
-                                            class="uil uil-map-marker text-primary"></i> <a href="javascript:void(0)"
-                                            class="text-dark">Udemy</a>, San Francisco
-                                    </li>
-                                    <li class="d-lg-inline text-muted h6 mb-0 me-lg-2"><i
-                                            class="uil uil-clock text-primary"></i> 8hr/ Day</li>
-                                    <li class="d-lg-inline text-muted h6 mb-0"><i class="uil uil-bill text-primary"></i>
-                                        30k-35k</li>
-                                </ul>
-
-                                <div class="mt-2">
-                                    <span class="badge bg-soft-primary">Fulltime</span>
-                                    <span class="badge bg-soft-warning">Office</span>
-                                </div>
-                            </div>
-
-                            <div class="position-absolute top-0 end-0 mt-3 me-3">
-                                <a href="javascript:void(0)" class="btn btn-icon btn-pills btn-soft-primary"><i
-                                        class="uil uil-bookmark align-middle"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                    <!--end col-->
-
-                    <div class="col-12 mt-4 pt-2">
-                        <div class="job-box d-md-flex align-items-center border-0 shadow rounded p-4 position-relative">
-                            <img src="{{ asset('assets/images/logo-placeholder.jpeg') }}" class="avatar avatar-md-sm" alt="">
-
-                            <div class="ms-md-4 mt-4 mt-sm-0">
-                                <a href="#" class="text-dark h5">Web Developer</a>
-
-                                <ul class="list-unstyled mb-0 mt-2">
-                                    <li class="d-lg-inline text-muted h6 mb-0 me-lg-2"><i
-                                            class="uil uil-map-marker text-primary"></i> <a href="javascript:void(0)"
-                                            class="text-dark">Webhooks</a>, San Francisco
-                                    </li>
-                                    <li class="d-lg-inline text-muted h6 mb-0 me-lg-2"><i
-                                            class="uil uil-clock text-primary"></i> 8hr/ Day</li>
-                                    <li class="d-lg-inline text-muted h6 mb-0"><i class="uil uil-bill text-primary"></i>
-                                        30k-35k</li>
-                                </ul>
-
-                                <div class="mt-2">
-                                    <span class="badge bg-soft-primary">Fulltime</span>
-                                    <span class="badge bg-soft-warning">Office</span>
-                                </div>
-                            </div>
-
-                            <div class="position-absolute top-0 end-0 mt-3 me-3">
-                                <a href="javascript:void(0)" class="btn btn-icon btn-pills btn-soft-primary"><i
-                                        class="uil uil-bookmark align-middle"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                    <!--end col-->
-
-                    <div class="col-12 mt-4 pt-2">
-                        <div class="job-box d-md-flex align-items-center border-0 shadow rounded p-4 position-relative">
-                            <img src="{{ asset('assets/images/logo-placeholder.jpeg') }}" class="avatar avatar-md-sm" alt="">
-
-                            <div class="ms-md-4 mt-4 mt-sm-0">
-                                <a href="#" class="text-dark h5">Web Developer</a>
-
-                                <ul class="list-unstyled mb-0 mt-2">
-                                    <li class="d-lg-inline text-muted h6 mb-0 me-lg-2"><i
-                                            class="uil uil-map-marker text-primary"></i> <a href="javascript:void(0)"
-                                            class="text-dark">Sketch</a>, San Francisco
-                                    </li>
-                                    <li class="d-lg-inline text-muted h6 mb-0 me-lg-2"><i
-                                            class="uil uil-clock text-primary"></i> 8hr/ Day</li>
-                                    <li class="d-lg-inline text-muted h6 mb-0"><i class="uil uil-bill text-primary"></i>
-                                        30k-35k</li>
-                                </ul>
-
-                                <div class="mt-2">
-                                    <span class="badge bg-soft-primary">Fulltime</span>
-                                    <span class="badge bg-soft-warning">Office</span>
-                                </div>
-                            </div>
-
-                            <div class="position-absolute top-0 end-0 mt-3 me-3">
-                                <a href="javascript:void(0)" class="btn btn-icon btn-pills btn-soft-primary"><i
-                                        class="uil uil-bookmark align-middle"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                    <!--end col-->
-
-                    <div class="col-12 mt-4 pt-2">
-                        <!-- PAGINATION START -->
-                        <ul class="pagination justify-content-center mb-0">
-                            <li class="page-item"><a class="page-link" href="javascript:void(0)"
-                                    aria-label="Previous">Prev</a></li>
-                            <li class="page-item active"><a class="page-link" href="javascript:void(0)">1</a></li>
-                            <li class="page-item"><a class="page-link" href="javascript:void(0)">2</a></li>
-                            <li class="page-item"><a class="page-link" href="javascript:void(0)">3</a></li>
-                            <li class="page-item"><a class="page-link" href="javascript:void(0)"
-                                    aria-label="Next">Next</a></li>
-                        </ul>
-                        <!-- PAGINATION END -->
                     </div>
                     <!--end col-->
                 </div>
